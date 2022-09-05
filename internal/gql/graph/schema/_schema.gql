@@ -1,0 +1,19 @@
+scalar ObjectID
+scalar Int64
+
+schema {
+  query: Query
+}
+
+type Query {
+  member(search: String): Member!
+  members(limitArg: Int = 20, pageArg: Int = 1, sort: MemberSort): MemberConnection!
+  streams(limitArg: Int = 20, pageArg: Int = 1, status: StreamStatus): StreamConnection!
+}
+
+directive @goField(
+  forceResolver: Boolean
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION
+

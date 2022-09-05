@@ -1,0 +1,30 @@
+type Member {
+  id: ID!
+  twitch_id: String!
+  login: String!
+  display_name: String!
+  color: String!
+  pfp: String!
+  links: MemberLink!
+}
+
+type MemberLink {
+  twitch: String!
+  reddit: String!
+  instagram: String!
+  twitter: String!
+  discord: String!
+  youtube: String!
+  tiktok: String!
+  vrchat_legends: String!
+}
+
+type MemberConnection {
+  members: [Member!]!
+  page_info: PageInfo!
+}
+
+enum MemberSort {
+  AZ
+  ZA
+}

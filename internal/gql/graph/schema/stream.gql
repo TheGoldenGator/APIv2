@@ -1,0 +1,23 @@
+type Stream {
+  id: ObjectID!
+  twitch_id: String!
+  member: Member @goField(forceResolver: true)
+  status: StreamStatus!
+  title: String!
+  game_id: String!
+  game: String!
+  viewers: Int!
+  thumbnail: String!
+  started_at: String!
+}
+
+type StreamConnection {
+  streams: [Stream!]!
+  page_info: PageInfo!
+}
+
+enum StreamStatus {
+  ONLINE
+  OFFLINE
+  ALL
+}

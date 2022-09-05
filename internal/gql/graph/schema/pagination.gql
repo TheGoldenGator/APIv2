@@ -1,0 +1,8 @@
+type PageInfo {
+  total: Int64!
+  page: Int64!
+  perPage: Int64!
+  prev: Int64!
+  next: Int64!
+  totalPage: Int64!
+}
