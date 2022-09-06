@@ -28,6 +28,7 @@ var (
 	SSEMessageEventStreamOffline SSEMessageEvent = "stream.offline"
 	SSEMessageEventChannelUpdate SSEMessageEvent = "channel.update"
 	SSEMessageEventViewers       SSEMessageEvent = "viewers"
+	SSEMessageEventConnected     SSEMessageEvent = "connected" // When user initiates
 )
 
 func (s SSEChannel) String() string {

@@ -26,6 +26,7 @@ func (r *streamResolver) Member(ctx context.Context, obj *model.Stream) (*model.
 		TwitchID:    member.TwitchID,
 		Login:       member.Login,
 		DisplayName: member.DisplayName,
+		Color:       member.Color,
 		Pfp:         member.Pfp,
 		Links:       (*model.MemberLink)(member.Links),
 	}, nil

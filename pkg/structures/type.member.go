@@ -9,6 +9,7 @@ type Member struct {
 	DisplayName string             `json:"display_name" bson:"display_name"`
 	Color       string             `json:"color" bson:"color"`
 	Pfp         string             `json:"pfp" bson:"pfp"`
+	PfpSevenTV  string             `json:"pfp_seventv" bson:"pfp_seventv"`
 	Links       *MemberLink        `json:"links" bson:"links"`
 }
 

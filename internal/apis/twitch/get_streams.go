@@ -6,7 +6,7 @@ import (
 )
 
 func (t Twitch) GetStreams(ids []string) ([]Stream, error) {
-	body, err := t.makeRequest("GET", "/streams?first=100&user_id="+strings.Join(ids, "&user_id="))
+	body, err := t.makeRequest("GET", "/streams?user_id="+strings.Join(ids, "&user_id="))
 	if err != nil {
 		return nil, err
 	}
@@ -16,6 +16,8 @@ func (t Twitch) GetStreams(ids []string) ([]Stream, error) {
 		if string(body) == `""` {
 			return nil, nil
 		}
+
+		return nil, err
 	}
 
 	return streams.Streams, nil
