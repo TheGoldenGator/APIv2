@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/99designs/gqlgen v0.17.14
 	github.com/go-chi/chi v4.0.3+incompatible
+	github.com/go-co-op/gocron v1.17.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gobeam/mongo-go-pagination v0.0.8
 	github.com/gorilla/websocket v1.5.0
@@ -31,6 +32,7 @@ require (
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect

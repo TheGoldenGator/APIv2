@@ -17,11 +17,22 @@ type SSEMessage struct {
 	Data   interface{}        `json:"data"`   // Data from the event
 }
 
+type SSEHeartbeatAction string
+type SSEMessageHeartbeat struct {
+	Action SSEHeartbeatAction `json:"action"`
+	ID     string             `json:"id"`
+}
+
 var (
 	Server *sse.Server
 
+	// Heartbeat actions
+	SSEHeartbeatActionJoin SSEHeartbeatAction = "join"
+	SSEHeartbeatActionPart SSEHeartbeatAction = "part"
+
 	// Channels
-	SSEChannelEvents SSEChannel = "events"
+	SSEChannelEvents    SSEChannel = "events"
+	SSEChannelHeartbeat SSEChannel = "heartbeat"
 
 	// Events
 	SSEMessageEventStreamOnline  SSEMessageEvent = "stream.online"

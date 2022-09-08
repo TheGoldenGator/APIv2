@@ -12,6 +12,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
+	"github.com/go-co-op/gocron"
 	"github.com/gorilla/websocket"
 	"github.com/rs/cors"
 	"github.com/thegoldengator/APIv2/internal/apis"
@@ -21,6 +22,7 @@ import (
 	"github.com/thegoldengator/APIv2/internal/events"
 	"github.com/thegoldengator/APIv2/internal/gql/graph/generated"
 	"github.com/thegoldengator/APIv2/internal/gql/resolvers"
+	"github.com/thegoldengator/APIv2/internal/routes"
 	"github.com/thegoldengator/APIv2/internal/routines"
 	"github.com/thegoldengator/APIv2/internal/sse"
 )
@@ -38,13 +40,29 @@ func main() {
 		panic(connectErr)
 	}
 
+	go func() {
+		s := gocron.NewScheduler(time.UTC)
+		s.Every(5).Minutes().Do(func() {
+			err := routines.ViewCount()
+			if err != nil {
+				fmt.Println("Error updating view count", err)
+			}
+		})
+		/* s.Every(24).Hours().Do(func() {
+			err := routines.Pfp()
+			fmt.Println("Error updating pfps", err)
+		}) */
+
+		s.StartAsync()
+	}()
+
 	// Initialize SSE
 	sse.Connect()
 
 	router := chi.NewRouter()
 
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:3000"},
+		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:3000", "thegoldengator.tv", "api.thegoldengator.tv"},
 		AllowCredentials: true,
 		Debug:            false,
 	}).Handler)
@@ -54,31 +72,24 @@ func main() {
 		Upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				// Check against your desired domains here
-				return r.Host == "example.org"
+				return r.Host == "thegoldengator.tv"
 			},
 			ReadBufferSize:  1024,
 			WriteBufferSize: 1024,
 		},
 	})
 
+	sseServer := sse.NewServer()
+
 	router.Handle("/playground", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
-	router.HandleFunc("/sse", func(w http.ResponseWriter, r *http.Request) {
-		go func() {
-			// Received browser disconnection
-			<-r.Context().Done()
-			println("Client disconnected")
-		}()
-		sse.Server.ServeHTTP(w, r)
-	})
-
-	/* s := gocron.NewScheduler(time.UTC)
-	s.Every(5).Minutes().Do(routines.ViewCount())
-	s.Every(24).Hours().Do(routines.Pfp()) */
+	router.HandleFunc("/sse", sseServer.ServeHTTP)
 
 	router.HandleFunc("/test/createstreams", func(w http.ResponseWriter, r *http.Request) {
 		apis.Twitch.CreateStreams()
 	})
+
+	router.Post("/eventsub", routes.EventsubRecievedNotification)
 
 	router.HandleFunc("/test/event", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
@@ -126,24 +137,6 @@ func main() {
 		fmt.Println("Published message")
 	})
 
-	router.HandleFunc("/test/colors", func(w http.ResponseWriter, r *http.Request) {
-		errColors := apis.Twitch.SetColors()
-		if errColors != nil {
-			panic(errColors)
-		}
-	})
-
-	router.HandleFunc("/test/viewers", func(w http.ResponseWriter, r *http.Request) {
-		errColors := routines.ViewCount()
-		if errColors != nil {
-			panic(errColors)
-		}
-	})
-
-	/* router.HandleFunc("/eventsub", func(w http.ResponseWriter, r *http.Request) {
-		routes.EventsubRecievedNotification(w, r)
-	}).Methods("POST")
-	*/
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
