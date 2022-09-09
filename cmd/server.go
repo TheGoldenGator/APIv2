@@ -61,6 +61,7 @@ func main() {
 		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:3000", "https://thegoldengator.tv"},
 		AllowCredentials: true,
 		Debug:            false,
+		AllowedHeaders:   []string{"Access-Control-Allow-Origin"},
 	}).Handler)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{}}))
