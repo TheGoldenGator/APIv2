@@ -24,6 +24,11 @@ func ViewCount() error {
 		return err
 	}
 
+	if len(streams) == 0 {
+		fmt.Println("No streams to update")
+		return nil
+	}
+
 	var ids = []string{}
 	for _, s := range streams {
 		ids = append(ids, s.TwitchID)

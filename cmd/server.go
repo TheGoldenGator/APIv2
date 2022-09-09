@@ -27,7 +27,7 @@ import (
 	"github.com/thegoldengator/APIv2/internal/sse"
 )
 
-const defaultPort = "8080"
+const defaultPort = "8000"
 
 func main() {
 	port := os.Getenv("PORT")
@@ -62,7 +62,7 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:3000", "thegoldengator.tv", "api.thegoldengator.tv"},
+		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:3000"},
 		AllowCredentials: true,
 		Debug:            false,
 	}).Handler)
@@ -72,7 +72,7 @@ func main() {
 		Upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				// Check against your desired domains here
-				return r.Host == "thegoldengator.tv"
+				return r.Host == "thegoldengator.tv" || r.Host == "localhost"
 			},
 			ReadBufferSize:  1024,
 			WriteBufferSize: 1024,
