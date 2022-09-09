@@ -49,5 +49,10 @@ func (s SSEChannel) String() string {
 func Connect() {
 	Server = sse.New()
 	Server.EventTTL = time.Second * 1
+
+	Server.Headers["Content-Type"] = "text/event-stream"
+	Server.Headers["Cache-Control"] = "no-cache"
+	Server.Headers["Connection"] = "keep-alive"
+	Server.Headers["Access-Control-Allow-Origin"] = "*"
 	Server.CreateStream(SSEChannelEvents.String())
 }
