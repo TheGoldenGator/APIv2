@@ -79,11 +79,18 @@ func main() {
 		},
 	})
 
-	sseServer := sse.NewServer()
+	//sseServer := sse.NewServer()
 
 	router.Handle("/playground", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
-	router.HandleFunc("/sse", sseServer.ServeHTTP)
+	router.HandleFunc("/sse", func(w http.ResponseWriter, r *http.Request) {
+		go func() {
+			// Received browser disconnection
+			<-r.Context().Done()
+			println("Client disconnected")
+		}()
+		sse.Server.ServeHTTP(w, r)
+	})
 
 	router.HandleFunc("/test/createstreams", func(w http.ResponseWriter, r *http.Request) {
 		apis.Twitch.CreateStreams()

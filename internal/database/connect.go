@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/go-redis/redis/v8"
-	"github.com/thegoldengator/APIv2/internal/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -20,7 +18,6 @@ type mongoS struct {
 
 var (
 	Mongo *mongoS
-	RDB   *redis.Client
 )
 
 func init() {
@@ -50,31 +47,6 @@ func Connect(mongoUri string) error {
 	Mongo.Requests = ggdb.Collection("requests")
 
 	fmt.Println("[INFO] Connected to MongoDB")
-
-	// Redis Connection
-	if config.Config.GetString("environment") == "dev" {
-		RDB = redis.NewClient(&redis.Options{
-			Addr:     "localhost:6379",
-			Password: "",
-			DB:       0,
-		})
-	} else {
-		RDB = redis.NewClient(&redis.Options{
-			Addr:     "redis:6379",
-			Password: "mypassword",
-			DB:       0,
-		})
-	}
-
-	pong, err := RDB.Ping(RDB.Context()).Result()
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-
-	if pong == "PONG" {
-		fmt.Print("[INFO] Connected to Redis\n")
-	}
 
 	return err
 }
