@@ -19,6 +19,10 @@ func (t Twitch) GetUser(id string) (*User, error) {
 		return nil, err
 	}
 
+	if len(users.Users) == 0 {
+		return nil, errors.New("user is banned or their name changed")
+	}
+
 	return &users.Users[0], nil
 }
 

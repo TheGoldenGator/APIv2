@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,11 +14,8 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/gorilla/websocket"
 	"github.com/rs/cors"
-	"github.com/thegoldengator/APIv2/internal/apis"
-	"github.com/thegoldengator/APIv2/internal/apis/twitch"
 	"github.com/thegoldengator/APIv2/internal/config"
 	"github.com/thegoldengator/APIv2/internal/database"
-	"github.com/thegoldengator/APIv2/internal/events"
 	"github.com/thegoldengator/APIv2/internal/gql/graph/generated"
 	"github.com/thegoldengator/APIv2/internal/gql/resolvers"
 	"github.com/thegoldengator/APIv2/internal/routes"
@@ -48,10 +44,10 @@ func main() {
 				fmt.Println("Error updating view count", err)
 			}
 		})
-		/* s.Every(24).Hours().Do(func() {
+		s.Every(24).Hours().Do(func() {
 			err := routines.Pfp()
 			fmt.Println("Error updating pfps", err)
-		}) */
+		})
 
 		s.StartAsync()
 	}()
@@ -79,8 +75,6 @@ func main() {
 		},
 	})
 
-	//sseServer := sse.NewServer()
-
 	router.Handle("/playground", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
 	router.HandleFunc("/sse", func(w http.ResponseWriter, r *http.Request) {
@@ -91,14 +85,13 @@ func main() {
 		}()
 		sse.Server.ServeHTTP(w, r)
 	})
-
-	router.HandleFunc("/test/createstreams", func(w http.ResponseWriter, r *http.Request) {
-		apis.Twitch.CreateStreams()
-	})
-
 	router.Post("/eventsub", routes.EventsubRecievedNotification)
 
-	router.HandleFunc("/test/event", func(w http.ResponseWriter, r *http.Request) {
+	/* router.HandleFunc("/test/createstreams", func(w http.ResponseWriter, r *http.Request) {
+		apis.Twitch.CreateStreams()
+	}) */
+
+	/* router.HandleFunc("/test/event", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var body map[string]interface{}
 		errDecode := decoder.Decode(&body)
@@ -142,7 +135,7 @@ func main() {
 		}
 
 		fmt.Println("Published message")
-	})
+	}) */
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, router))

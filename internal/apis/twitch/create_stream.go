@@ -12,13 +12,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (t Twitch) CreateStreams() ([]structures.Member, error) {
+func (t Twitch) CreateStreams() ([]*structures.Member, error) {
 	cursor, err := database.Mongo.Members.Find(context.Background(), bson.M{})
 	if err != nil {
 		return nil, err
 	}
 
-	var streamers []structures.Member
+	var streamers []*structures.Member
 	if err = cursor.All(context.Background(), &streamers); err != nil {
 		return nil, err
 	}
@@ -31,7 +31,20 @@ func (t Twitch) CreateStreams() ([]structures.Member, error) {
 				// No document found for member, so create the stream with empty data
 				member, err := t.GetUser(m.TwitchID)
 				if err != nil {
-					return nil, err
+					member = &User{
+						ID:              "525322083",
+						Login:           "jouffa",
+						DisplayName:     "jouffa",
+						Type:            "live",
+						BroadcasterType: "affiliate",
+						Description:     "",
+						ProfileImageURL: "https://static-cdn.jtvnw.net/jtv_user_pictures/cf778454-20ee-440c-96a9-702caa5d0beb-profile_image-600x600.png",
+						OfflineImageURL: "",
+						ViewCount:       1,
+						Email:           "",
+						CreatedAt:       time.Now(),
+					}
+					docs = append(docs, *member)
 				}
 
 				stream, err := t.GetStreamData(m.TwitchID)
