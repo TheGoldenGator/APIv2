@@ -1,0 +1,11 @@
+# 1. Specify the bersion for docker-compose.yaml
+version: "3.8"
+
+# 2. Generate services needed
+services:
+  go:
+    container_name: "tgg_api"
+    build:
+      context: .
+    ports:
+      - "8000:8000"
