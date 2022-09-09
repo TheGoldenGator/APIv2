@@ -6,7 +6,6 @@ require (
 	github.com/99designs/gqlgen v0.17.14
 	github.com/go-chi/chi v4.0.3+incompatible
 	github.com/go-co-op/gocron v1.17.0
-	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gobeam/mongo-go-pagination v0.0.8
 	github.com/gorilla/websocket v1.5.0
 	github.com/r3labs/sse/v2 v2.8.1
@@ -18,9 +17,7 @@ require (
 
 require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
-	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
