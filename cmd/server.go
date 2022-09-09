@@ -49,6 +49,10 @@ func main() {
 			fmt.Println("Error updating pfps", err)
 		})
 
+		s.Every(30).Seconds().Do(func() {
+			sse.PublishPing(sse.SSEChannelEvents)
+		})
+
 		s.StartAsync()
 	}()
 
