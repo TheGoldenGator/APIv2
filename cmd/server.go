@@ -58,10 +58,10 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:3000", "https://thegoldengator.tv"},
+		AllowedOrigins:   []string{"http://localhost:8080", "http://localhost:3000", "https://thegoldengator.tv", "http://api.thegoldengator.tv"},
 		AllowCredentials: true,
 		Debug:            false,
-		AllowedHeaders:   []string{"Access-Control-Allow-Origin"},
+		AllowedHeaders:   []string{"X-PINGOTHER", "Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 	}).Handler)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{}}))
