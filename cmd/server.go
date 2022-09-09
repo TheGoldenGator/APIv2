@@ -80,19 +80,18 @@ func main() {
 	router.Handle("/playground", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
 	router.HandleFunc("/sse", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/event-stream")
-		w.Header().Set("Cache-Control", "no-cache")
-		w.Header().Set("Connection", "keep-alive")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
 		go func() {
-			w.Header().Set("Content-Type", "text/event-stream")
-			w.Header().Set("Cache-Control", "no-cache")
-			w.Header().Set("Connection", "keep-alive")
-			w.Header().Set("Access-Control-Allow-Origin", "*")
 			// Received browser disconnection
 			<-r.Context().Done()
 			println("Client disconnected")
 		}()
+
+		sse.Server.Headers = map[string]string{
+			"Content-Type":                "text/event-stream",
+			"Cache-Control":               "no-cache",
+			"Connection":                  "keep-alive",
+			"Access-Control-Allow-Origin": "*",
+		}
 		sse.Server.ServeHTTP(w, r)
 	})
 	router.Post("/eventsub", routes.EventsubRecievedNotification)
