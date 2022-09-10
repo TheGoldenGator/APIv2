@@ -15,7 +15,14 @@ func PublishMessage(channel SSEChannel, message SSEMessage) {
 }
 
 func PublishPing(channel SSEChannel) {
+	msg := SSEMessage{
+		Event:  "ping",
+		Member: nil,
+		Stream: nil,
+		Data:   nil,
+	}
+	jsonStr, _ := json.Marshal(msg)
 	Server.Publish(channel.String(), &sse.Event{
-		Data: []byte("ping"),
+		Data: jsonStr,
 	})
 }

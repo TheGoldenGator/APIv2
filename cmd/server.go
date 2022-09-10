@@ -51,7 +51,6 @@ func main() {
 			err := routines.Pfp()
 			fmt.Println("Error updating pfps", err)
 		})
-
 		s.Every(30).Seconds().Do(func() {
 			sse.PublishPing(sse.SSEChannelEvents)
 		})
