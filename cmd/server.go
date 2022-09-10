@@ -82,15 +82,7 @@ func main() {
 
 	router.Handle("/playground", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
-	router.HandleFunc("/sse", func(w http.ResponseWriter, r *http.Request) {
-		go func() {
-			// Received browser disconnection
-			<-r.Context().Done()
-			println("Client disconnected")
-		}()
-
-		sse.Server.ServeHTTP(w, r)
-	})
+	router.HandleFunc("/sse", sse.SSEServer.ServeHTTP)
 	router.Post("/eventsub", routes.EventsubRecievedNotification)
 
 	/* router.HandleFunc("/test/createstreams", func(w http.ResponseWriter, r *http.Request) {
