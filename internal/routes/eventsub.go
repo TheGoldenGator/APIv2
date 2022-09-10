@@ -61,6 +61,8 @@ func EventsubRecievedNotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(vals)
+
 	eventType := bytes.NewBuffer([]byte(vals.Subscription.Type)).String()
 
 	switch {

@@ -36,6 +36,9 @@ func main() {
 		panic(connectErr)
 	}
 
+	// Initialize SSE
+	sse.Connect()
+
 	go func() {
 		s := gocron.NewScheduler(time.UTC)
 		s.Every(5).Minutes().Do(func() {
@@ -55,9 +58,6 @@ func main() {
 
 		s.StartAsync()
 	}()
-
-	// Initialize SSE
-	sse.Connect()
 
 	router := chi.NewRouter()
 
