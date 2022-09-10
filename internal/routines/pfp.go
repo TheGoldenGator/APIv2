@@ -9,7 +9,6 @@ import (
 	"github.com/thegoldengator/APIv2/internal/database"
 	"github.com/thegoldengator/APIv2/pkg/structures"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func Pfp() error {
@@ -46,7 +45,6 @@ func Pfp() error {
 			bson.D{
 				{Key: "$set", Value: bson.D{{Key: "pfp", Value: s.ProfileImageURL}}},
 			},
-			options.Update().SetUpsert(true),
 		)
 
 		if err != nil {
