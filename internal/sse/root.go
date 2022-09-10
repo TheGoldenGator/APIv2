@@ -43,6 +43,10 @@ func NewServer() (broker *Broker) {
 }
 
 func (broker *Broker) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	rw.Header().Set("Content-Type", "text/event-stream")
+	rw.Header().Set("Cache-Control", "no-cache")
+	rw.Header().Set("Connection", "keep-alive")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// Make sure that the writer supports flushing.
 	//
@@ -52,11 +56,6 @@ func (broker *Broker) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		http.Error(rw, "Streaming unsupported!", http.StatusInternalServerError)
 		return
 	}
-
-	rw.Header().Set("Content-Type", "text/event-stream")
-	rw.Header().Set("Cache-Control", "no-cache")
-	rw.Header().Set("Connection", "keep-alive")
-	rw.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// Each connection registers its own message channel with the Broker's connections registry
 	messageChan := make(chan []byte)
