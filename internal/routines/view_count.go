@@ -9,6 +9,7 @@ import (
 	"github.com/thegoldengator/APIv2/internal/sse"
 	"github.com/thegoldengator/APIv2/pkg/structures"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func ViewCount() error {
@@ -41,15 +42,18 @@ func ViewCount() error {
 
 	var toSend map[string]int = make(map[string]int)
 	for _, s := range helixStreams {
-		_, err := database.Mongo.Stream.UpdateOne(
+		res, err := database.Mongo.Stream.UpdateOne(
 			ctx,
-			bson.M{"twitch_id": s.ID},
-			bson.M{"$set": bson.M{"viewers": s.ViewerCount}},
+			bson.D{{Key: "twitch_id", Value: s.ID}},
+			bson.D{{Key: "$set", Value: bson.D{{Key: "viewers", Value: s.ViewerCount}}}},
+			options.Update().SetUpsert(true),
 		)
 
 		if err != nil {
-			return err
+			panic(err)
 		}
+
+		fmt.Println(res)
 
 		toSend[s.UserID] = s.ViewerCount
 		fmt.Printf("Updated viewer count for %v - %v\n", s.UserLogin, s.ViewerCount)
