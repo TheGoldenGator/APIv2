@@ -44,9 +44,7 @@ func ViewCount() error {
 		_, err := database.Mongo.Stream.UpdateOne(
 			ctx,
 			bson.M{"twitch_id": s.ID},
-			bson.D{
-				{Key: "$set", Value: bson.D{{Key: "viewers", Value: s.ViewerCount}}},
-			},
+			bson.M{"$set": bson.M{"viewers": s.ViewerCount}},
 		)
 
 		if err != nil {
