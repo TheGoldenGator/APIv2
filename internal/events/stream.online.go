@@ -15,7 +15,7 @@ func StreamOnline(event twitch.EventSubStreamOnlineEvent) error {
 	_, err := database.Mongo.Stream.UpdateOne(
 		context.Background(),
 		bson.M{"twitch_id": event.BroadcasterUserID},
-		bson.M{"$set": bson.M{"status": "ONLINE", "started_at": GetRFCTimestamp()}},
+		bson.M{"$set": bson.M{"status": "ONLINE", "started_at": event.StartedAt}},
 	)
 
 	if err != nil {
