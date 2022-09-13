@@ -3,6 +3,7 @@ package events
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/thegoldengator/APIv2/internal/apis/twitch"
 	"github.com/thegoldengator/APIv2/internal/database"
@@ -15,7 +16,7 @@ func StreamOnline(event twitch.EventSubStreamOnlineEvent) error {
 	_, err := database.Mongo.Stream.UpdateOne(
 		context.Background(),
 		bson.M{"twitch_id": event.BroadcasterUserID},
-		bson.M{"$set": bson.M{"status": "ONLINE", "started_at": event.StartedAt}},
+		bson.M{"$set": bson.M{"status": "ONLINE", "started_at": event.StartedAt.Format(time.RFC3339)}},
 	)
 
 	if err != nil {
