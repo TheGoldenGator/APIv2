@@ -1,14 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
+	"github.com/go-co-op/gocron"
 	"github.com/gorilla/websocket"
 	"github.com/rs/cors"
 	"github.com/thegoldengator/APIv2/internal/apis"
@@ -17,6 +20,7 @@ import (
 	"github.com/thegoldengator/APIv2/internal/gql/graph/generated"
 	"github.com/thegoldengator/APIv2/internal/gql/resolvers"
 	"github.com/thegoldengator/APIv2/internal/routes"
+	"github.com/thegoldengator/APIv2/internal/routines"
 	"github.com/thegoldengator/APIv2/internal/sse"
 )
 
@@ -42,7 +46,7 @@ func main() {
 	}
 
 	go func() {
-		/* s := gocron.NewScheduler(time.UTC)
+		s := gocron.NewScheduler(time.UTC)
 		s.Every(5).Minutes().Do(func() {
 			err := routines.ViewCount()
 			if err != nil {
@@ -57,7 +61,7 @@ func main() {
 			sse.PublishPing(sse.SSEChannelEvents)
 		})
 
-		s.StartAsync() */
+		s.StartAsync()
 	}()
 
 	router := chi.NewRouter()
@@ -88,9 +92,9 @@ func main() {
 	router.Get("/vrc/world/{username}", routes.VRCWorld)
 	router.Post("/eventsub", routes.EventsubRecievedNotification)
 
-	router.HandleFunc("/test/createstreams", func(w http.ResponseWriter, r *http.Request) {
+	/* router.HandleFunc("/test/createstreams", func(w http.ResponseWriter, r *http.Request) {
 		apis.Twitch.CreateStreams()
-	})
+	}) */
 
 	/* router.HandleFunc("/test/event", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
