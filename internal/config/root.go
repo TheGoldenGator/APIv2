@@ -19,6 +19,8 @@ type ServerConfig struct {
 	TwitchEventSubSecret   string `mapstructure:"twitch_eventsub_secret" json:"twitch_eventsub_secret"`
 	TwitchEventSubCallback string `mapstructure:"twitch_eventsub_callback" json:"twitch_eventsub_callback"`
 
+	VRCUsername string `mapstructure:"vrc_username" json:"vrc_username"`
+
 	MongoURI string `mapstructure:"mongo_uri" json:"mongo_uri"`
 }
 
