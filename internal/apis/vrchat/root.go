@@ -1,6 +1,7 @@
 package vrchat
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -10,6 +11,10 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/thegoldengator/APIv2/internal/database"
+	"github.com/thegoldengator/APIv2/pkg/structures"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 const (
@@ -254,6 +259,16 @@ func (v *VRC) GetWorld(username string) (*WorldSearch, error) {
 	userData, err := v.SearchUser(username)
 	if err != nil {
 		return nil, err
+	}
+
+	var stream structures.Stream
+	if err = database.Mongo.Stream.FindOne(context.Background(), bson.M{"login": username}).Decode(&stream); err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	if stream.Status == structures.StreamStatusOffline {
+		return nil, errors.New("this only works when streamer is online")
 	}
 
 	// Get the world data
