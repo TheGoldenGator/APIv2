@@ -5,18 +5,7 @@ type Member {
   display_name: String!
   color: String!
   pfp: String!
-  links: MemberLink!
-}
-
-type MemberLink {
-  twitch: String!
-  reddit: String!
-  instagram: String!
-  twitter: String!
-  discord: String!
-  youtube: String!
-  tiktok: String!
-  vrchat_legends: String!
+  links: [String!]!
 }
 
 type MemberConnection {

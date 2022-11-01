@@ -31,20 +31,7 @@ func (t Twitch) CreateStreams() ([]*structures.Member, error) {
 				// No document found for member, so create the stream with empty data
 				member, err := t.GetUser(m.TwitchID)
 				if err != nil {
-					member = &User{
-						ID:              "525322083",
-						Login:           "jouffa",
-						DisplayName:     "jouffa",
-						Type:            "live",
-						BroadcasterType: "affiliate",
-						Description:     "",
-						ProfileImageURL: "https://static-cdn.jtvnw.net/jtv_user_pictures/cf778454-20ee-440c-96a9-702caa5d0beb-profile_image-600x600.png",
-						OfflineImageURL: "",
-						ViewCount:       1,
-						Email:           "",
-						CreatedAt:       time.Now(),
-					}
-					docs = append(docs, *member)
+					fmt.Println(err)
 				}
 
 				stream, err := t.GetStreamData(m.TwitchID)
@@ -86,6 +73,8 @@ func (t Twitch) CreateStreams() ([]*structures.Member, error) {
 			}
 		}
 	}
+
+	fmt.Println(docs)
 
 	_, errInsert := database.Mongo.Stream.InsertMany(context.Background(), docs)
 	if errInsert != nil {

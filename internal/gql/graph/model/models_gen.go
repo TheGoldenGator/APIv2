@@ -9,29 +9,18 @@ import (
 )
 
 type Member struct {
-	ID          string      `json:"id"`
-	TwitchID    string      `json:"twitch_id"`
-	Login       string      `json:"login"`
-	DisplayName string      `json:"display_name"`
-	Color       string      `json:"color"`
-	Pfp         string      `json:"pfp"`
-	Links       *MemberLink `json:"links"`
+	ID          string   `json:"id"`
+	TwitchID    string   `json:"twitch_id"`
+	Login       string   `json:"login"`
+	DisplayName string   `json:"display_name"`
+	Color       string   `json:"color"`
+	Pfp         string   `json:"pfp"`
+	Links       []string `json:"links"`
 }
 
 type MemberConnection struct {
 	Members  []*Member `json:"members"`
 	PageInfo *PageInfo `json:"page_info"`
-}
-
-type MemberLink struct {
-	Twitch        string `json:"twitch"`
-	Reddit        string `json:"reddit"`
-	Instagram     string `json:"instagram"`
-	Twitter       string `json:"twitter"`
-	Discord       string `json:"discord"`
-	Youtube       string `json:"youtube"`
-	Tiktok        string `json:"tiktok"`
-	VrchatLegends string `json:"vrchat_legends"`
 }
 
 type PageInfo struct {
@@ -41,19 +30,6 @@ type PageInfo struct {
 	Prev      int64 `json:"prev"`
 	Next      int64 `json:"next"`
 	TotalPage int64 `json:"totalPage"`
-}
-
-type StatEntry struct {
-	TwitchID        string `json:"twitch_id"`
-	Rank            int64  `json:"rank"`
-	MinutesStreamed int64  `json:"minutes_streamed"`
-	AvgViewers      int64  `json:"avg_viewers"`
-	MaxViewers      int64  `json:"max_viewers"`
-	HoursWatched    int64  `json:"hours_watched"`
-	Followers       int64  `json:"followers"`
-	Views           int64  `json:"views"`
-	FollowersTotal  int64  `json:"followers_total"`
-	ViewsTotal      int64  `json:"views_total"`
 }
 
 type Stream struct {

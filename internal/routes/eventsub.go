@@ -10,10 +10,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/thegoldengator/APIv2/internal/apis/twitch"
 	"github.com/thegoldengator/APIv2/internal/config"
 	"github.com/thegoldengator/APIv2/internal/events"
+	"github.com/thegoldengator/APIv2/pkg/structures"
 )
 
 // Verify message from EventSub
@@ -55,51 +57,94 @@ func EventsubRecievedNotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if there's a challenge in the request, respond with only the challenge to verify your eventsub.
-	if vals.Challenge != "" {
+	twitchEventType := r.Header.Get("Twitch-Eventsub-Message-Type")
+
+	switch twitchEventType {
+	case "notification":
+		eventType := bytes.NewBuffer([]byte(vals.Subscription.Type)).String()
+		switch {
+		case eventType == "stream.online":
+			var streamOnline twitch.EventSubStreamOnlineEvent
+			err := json.NewDecoder(bytes.NewReader(vals.Event)).Decode(&streamOnline)
+			if err != nil {
+				panic(err.Error())
+			}
+
+			errDb := events.StreamOnline(streamOnline)
+			if errDb != nil {
+				panic(err.Error())
+			}
+
+		case eventType == "stream.offline":
+			var streamOffline twitch.EventSubStreamOfflineEvent
+			err := json.NewDecoder(bytes.NewReader(vals.Event)).Decode(&streamOffline)
+			if err != nil {
+				panic(err.Error())
+			}
+
+			errDb := events.StreamOffline(streamOffline)
+			if errDb != nil {
+				panic(err.Error())
+			}
+
+		case eventType == "channel.update":
+			var streamUpdate twitch.EventSubChannelUpdateEvent
+			err := json.NewDecoder(bytes.NewReader(vals.Event)).Decode(&streamUpdate)
+			if err != nil {
+				panic(err.Error())
+			}
+
+			errDb := events.ChannelUpdate(streamUpdate)
+			if errDb != nil {
+				panic(err.Error())
+			}
+		}
+
+		// if there's a challenge in the request, respond with only the challenge to verify your eventsub.
+	case "webhook_callback_verification":
+		// Since we're verifiying it, create the subscription if it doesn't already exist
+		events.HandleEvent(structures.HelixSub{
+			UUID:      vals.Subscription.ID,
+			Event:     vals.Subscription.Type,
+			TwitchID:  vals.Subscription.Condition.BroadcasterUserID,
+			CreatedAt: vals.Subscription.CreatedAt.Format(time.RFC3339),
+			Status:    structures.HelixSubStatusEnabled,
+		})
 		w.Write([]byte(vals.Challenge))
 		return
-	}
 
-	fmt.Println(vals)
+	case "revocation":
+		switch vals.Subscription.Status {
+		case "user_removed":
+			// User mentioned in subscription doesn't exist anymore. The notification status is set to user_removed
+			events.HandleEvent(structures.HelixSub{
+				UUID:      vals.Subscription.ID,
+				Event:     vals.Subscription.Type,
+				TwitchID:  vals.Subscription.Condition.BroadcasterUserID,
+				CreatedAt: vals.Subscription.CreatedAt.Format(time.RFC3339),
+				Status:    structures.HelixSubStatusUserRemoved,
+			})
 
-	eventType := bytes.NewBuffer([]byte(vals.Subscription.Type)).String()
+		case "authorization_revoked":
+			// The user revoked the authorization token or simply changed their password. The notification’s status is set to authorization_revoked.
+			events.HandleEvent(structures.HelixSub{
+				UUID:      vals.Subscription.ID,
+				Event:     vals.Subscription.Type,
+				TwitchID:  vals.Subscription.Condition.BroadcasterUserID,
+				CreatedAt: vals.Subscription.CreatedAt.Format(time.RFC3339),
+				Status:    structures.HelixSubStatusAuthorizationRevoked,
+			})
 
-	switch {
-	case eventType == "stream.online":
-		var streamOnline twitch.EventSubStreamOnlineEvent
-		err := json.NewDecoder(bytes.NewReader(vals.Event)).Decode(&streamOnline)
-		if err != nil {
-			panic(err.Error())
-		}
-
-		errDb := events.StreamOnline(streamOnline)
-		if errDb != nil {
-			panic(err.Error())
-		}
-
-	case eventType == "stream.offline":
-		var streamOffline twitch.EventSubStreamOfflineEvent
-		err := json.NewDecoder(bytes.NewReader(vals.Event)).Decode(&streamOffline)
-		if err != nil {
-			panic(err.Error())
-		}
-
-		errDb := events.StreamOffline(streamOffline)
-		if errDb != nil {
-			panic(err.Error())
-		}
-
-	case eventType == "channel.update":
-		var streamUpdate twitch.EventSubChannelUpdateEvent
-		err := json.NewDecoder(bytes.NewReader(vals.Event)).Decode(&streamUpdate)
-		if err != nil {
-			panic(err.Error())
-		}
-
-		errDb := events.ChannelUpdate(streamUpdate)
-		if errDb != nil {
-			panic(err.Error())
+		case "notification_failures_exceeded":
+			// he callback failed to respond in a timely manner too many times.
+			events.HandleEvent(structures.HelixSub{
+				UUID:      vals.Subscription.ID,
+				Event:     vals.Subscription.Type,
+				TwitchID:  vals.Subscription.Condition.BroadcasterUserID,
+				CreatedAt: vals.Subscription.CreatedAt.Format(time.RFC3339),
+				Status:    structures.HelixSubStatusNotificationFailuresExceeded,
+			})
 		}
 	}
+
 }

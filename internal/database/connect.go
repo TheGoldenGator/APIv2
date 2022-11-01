@@ -14,6 +14,7 @@ type mongoS struct {
 	Stream   *mongo.Collection
 	Members  *mongo.Collection
 	Requests *mongo.Collection
+	Events   *mongo.Collection
 }
 
 var (
@@ -45,6 +46,7 @@ func Connect(mongoUri string) error {
 	Mongo.Stream = ggdb.Collection("streams")
 	Mongo.Members = ggdb.Collection("members")
 	Mongo.Requests = ggdb.Collection("requests")
+	Mongo.Events = ggdb.Collection("events")
 
 	fmt.Println("[INFO] Connected to MongoDB")
 

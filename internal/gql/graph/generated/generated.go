@@ -60,17 +60,6 @@ type ComplexityRoot struct {
 		PageInfo func(childComplexity int) int
 	}
 
-	MemberLink struct {
-		Discord       func(childComplexity int) int
-		Instagram     func(childComplexity int) int
-		Reddit        func(childComplexity int) int
-		Tiktok        func(childComplexity int) int
-		Twitch        func(childComplexity int) int
-		Twitter       func(childComplexity int) int
-		VrchatLegends func(childComplexity int) int
-		Youtube       func(childComplexity int) int
-	}
-
 	PageInfo struct {
 		Next      func(childComplexity int) int
 		Page      func(childComplexity int) int
@@ -84,19 +73,6 @@ type ComplexityRoot struct {
 		Member  func(childComplexity int, search *string) int
 		Members func(childComplexity int, limitArg *int, pageArg *int, sort *model.MemberSort) int
 		Streams func(childComplexity int, limitArg *int, pageArg *int, status *model.StreamStatus) int
-	}
-
-	StatEntry struct {
-		AvgViewers      func(childComplexity int) int
-		Followers       func(childComplexity int) int
-		FollowersTotal  func(childComplexity int) int
-		HoursWatched    func(childComplexity int) int
-		MaxViewers      func(childComplexity int) int
-		MinutesStreamed func(childComplexity int) int
-		Rank            func(childComplexity int) int
-		TwitchID        func(childComplexity int) int
-		Views           func(childComplexity int) int
-		ViewsTotal      func(childComplexity int) int
 	}
 
 	Stream struct {
@@ -205,62 +181,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.MemberConnection.PageInfo(childComplexity), true
 
-	case "MemberLink.discord":
-		if e.complexity.MemberLink.Discord == nil {
-			break
-		}
-
-		return e.complexity.MemberLink.Discord(childComplexity), true
-
-	case "MemberLink.instagram":
-		if e.complexity.MemberLink.Instagram == nil {
-			break
-		}
-
-		return e.complexity.MemberLink.Instagram(childComplexity), true
-
-	case "MemberLink.reddit":
-		if e.complexity.MemberLink.Reddit == nil {
-			break
-		}
-
-		return e.complexity.MemberLink.Reddit(childComplexity), true
-
-	case "MemberLink.tiktok":
-		if e.complexity.MemberLink.Tiktok == nil {
-			break
-		}
-
-		return e.complexity.MemberLink.Tiktok(childComplexity), true
-
-	case "MemberLink.twitch":
-		if e.complexity.MemberLink.Twitch == nil {
-			break
-		}
-
-		return e.complexity.MemberLink.Twitch(childComplexity), true
-
-	case "MemberLink.twitter":
-		if e.complexity.MemberLink.Twitter == nil {
-			break
-		}
-
-		return e.complexity.MemberLink.Twitter(childComplexity), true
-
-	case "MemberLink.vrchat_legends":
-		if e.complexity.MemberLink.VrchatLegends == nil {
-			break
-		}
-
-		return e.complexity.MemberLink.VrchatLegends(childComplexity), true
-
-	case "MemberLink.youtube":
-		if e.complexity.MemberLink.Youtube == nil {
-			break
-		}
-
-		return e.complexity.MemberLink.Youtube(childComplexity), true
-
 	case "PageInfo.next":
 		if e.complexity.PageInfo.Next == nil {
 			break
@@ -338,76 +258,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Streams(childComplexity, args["limitArg"].(*int), args["pageArg"].(*int), args["status"].(*model.StreamStatus)), true
-
-	case "StatEntry.avg_viewers":
-		if e.complexity.StatEntry.AvgViewers == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.AvgViewers(childComplexity), true
-
-	case "StatEntry.followers":
-		if e.complexity.StatEntry.Followers == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.Followers(childComplexity), true
-
-	case "StatEntry.followers_total":
-		if e.complexity.StatEntry.FollowersTotal == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.FollowersTotal(childComplexity), true
-
-	case "StatEntry.hours_watched":
-		if e.complexity.StatEntry.HoursWatched == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.HoursWatched(childComplexity), true
-
-	case "StatEntry.max_viewers":
-		if e.complexity.StatEntry.MaxViewers == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.MaxViewers(childComplexity), true
-
-	case "StatEntry.minutes_streamed":
-		if e.complexity.StatEntry.MinutesStreamed == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.MinutesStreamed(childComplexity), true
-
-	case "StatEntry.rank":
-		if e.complexity.StatEntry.Rank == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.Rank(childComplexity), true
-
-	case "StatEntry.twitch_id":
-		if e.complexity.StatEntry.TwitchID == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.TwitchID(childComplexity), true
-
-	case "StatEntry.views":
-		if e.complexity.StatEntry.Views == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.Views(childComplexity), true
-
-	case "StatEntry.views_total":
-		if e.complexity.StatEntry.ViewsTotal == nil {
-			break
-		}
-
-		return e.complexity.StatEntry.ViewsTotal(childComplexity), true
 
 	case "Stream.game":
 		if e.complexity.Stream.Game == nil {
@@ -572,18 +422,7 @@ directive @internal on FIELD_DEFINITION
   display_name: String!
   color: String!
   pfp: String!
-  links: MemberLink!
-}
-
-type MemberLink {
-  twitch: String!
-  reddit: String!
-  instagram: String!
-  twitter: String!
-  discord: String!
-  youtube: String!
-  tiktok: String!
-  vrchat_legends: String!
+  links: [String!]!
 }
 
 type MemberConnection {
@@ -602,18 +441,6 @@ enum MemberSort {
   prev: Int64!
   next: Int64!
   totalPage: Int64!
-}`, BuiltIn: false},
-	{Name: "../schema/stats.gql", Input: `type StatEntry {
-  twitch_id: String!
-  rank: Int64!
-  minutes_streamed: Int64!
-  avg_viewers: Int64!
-  max_viewers: Int64!
-  hours_watched: Int64!
-  followers: Int64!
-  views: Int64!
-  followers_total: Int64!
-  views_total: Int64!
 }`, BuiltIn: false},
 	{Name: "../schema/stream.gql", Input: `type Stream {
   id: ObjectID!
@@ -1069,9 +896,9 @@ func (ec *executionContext) _Member_links(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.MemberLink)
+	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalNMemberLink2ᚖgithubᚗcomᚋthegoldengatorᚋAPIv2ᚋinternalᚋgqlᚋgraphᚋmodelᚐMemberLink(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Member_links(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1081,25 +908,7 @@ func (ec *executionContext) fieldContext_Member_links(ctx context.Context, field
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "twitch":
-				return ec.fieldContext_MemberLink_twitch(ctx, field)
-			case "reddit":
-				return ec.fieldContext_MemberLink_reddit(ctx, field)
-			case "instagram":
-				return ec.fieldContext_MemberLink_instagram(ctx, field)
-			case "twitter":
-				return ec.fieldContext_MemberLink_twitter(ctx, field)
-			case "discord":
-				return ec.fieldContext_MemberLink_discord(ctx, field)
-			case "youtube":
-				return ec.fieldContext_MemberLink_youtube(ctx, field)
-			case "tiktok":
-				return ec.fieldContext_MemberLink_tiktok(ctx, field)
-			case "vrchat_legends":
-				return ec.fieldContext_MemberLink_vrchat_legends(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type MemberLink", field.Name)
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1218,358 +1027,6 @@ func (ec *executionContext) fieldContext_MemberConnection_page_info(ctx context.
 				return ec.fieldContext_PageInfo_totalPage(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PageInfo", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _MemberLink_twitch(ctx context.Context, field graphql.CollectedField, obj *model.MemberLink) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_MemberLink_twitch(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Twitch, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_MemberLink_twitch(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "MemberLink",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _MemberLink_reddit(ctx context.Context, field graphql.CollectedField, obj *model.MemberLink) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_MemberLink_reddit(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Reddit, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_MemberLink_reddit(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "MemberLink",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _MemberLink_instagram(ctx context.Context, field graphql.CollectedField, obj *model.MemberLink) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_MemberLink_instagram(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Instagram, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_MemberLink_instagram(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "MemberLink",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _MemberLink_twitter(ctx context.Context, field graphql.CollectedField, obj *model.MemberLink) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_MemberLink_twitter(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Twitter, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_MemberLink_twitter(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "MemberLink",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _MemberLink_discord(ctx context.Context, field graphql.CollectedField, obj *model.MemberLink) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_MemberLink_discord(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Discord, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_MemberLink_discord(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "MemberLink",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _MemberLink_youtube(ctx context.Context, field graphql.CollectedField, obj *model.MemberLink) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_MemberLink_youtube(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Youtube, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_MemberLink_youtube(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "MemberLink",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _MemberLink_tiktok(ctx context.Context, field graphql.CollectedField, obj *model.MemberLink) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_MemberLink_tiktok(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Tiktok, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_MemberLink_tiktok(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "MemberLink",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _MemberLink_vrchat_legends(ctx context.Context, field graphql.CollectedField, obj *model.MemberLink) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_MemberLink_vrchat_legends(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.VrchatLegends, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_MemberLink_vrchat_legends(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "MemberLink",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -2156,446 +1613,6 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_twitch_id(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_twitch_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TwitchID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_twitch_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_rank(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_rank(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Rank, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_rank(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_minutes_streamed(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_minutes_streamed(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.MinutesStreamed, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_minutes_streamed(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_avg_viewers(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_avg_viewers(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AvgViewers, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_avg_viewers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_max_viewers(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_max_viewers(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.MaxViewers, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_max_viewers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_hours_watched(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_hours_watched(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.HoursWatched, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_hours_watched(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_followers(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_followers(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Followers, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_followers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_views(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_views(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Views, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_views(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_followers_total(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_followers_total(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.FollowersTotal, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_followers_total(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _StatEntry_views_total(ctx context.Context, field graphql.CollectedField, obj *model.StatEntry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_StatEntry_views_total(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ViewsTotal, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNInt642int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_StatEntry_views_total(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "StatEntry",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int64 does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5064,83 +4081,6 @@ func (ec *executionContext) _MemberConnection(ctx context.Context, sel ast.Selec
 	return out
 }
 
-var memberLinkImplementors = []string{"MemberLink"}
-
-func (ec *executionContext) _MemberLink(ctx context.Context, sel ast.SelectionSet, obj *model.MemberLink) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, memberLinkImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("MemberLink")
-		case "twitch":
-
-			out.Values[i] = ec._MemberLink_twitch(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "reddit":
-
-			out.Values[i] = ec._MemberLink_reddit(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "instagram":
-
-			out.Values[i] = ec._MemberLink_instagram(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "twitter":
-
-			out.Values[i] = ec._MemberLink_twitter(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "discord":
-
-			out.Values[i] = ec._MemberLink_discord(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "youtube":
-
-			out.Values[i] = ec._MemberLink_youtube(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "tiktok":
-
-			out.Values[i] = ec._MemberLink_tiktok(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "vrchat_legends":
-
-			out.Values[i] = ec._MemberLink_vrchat_legends(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var pageInfoImplementors = []string{"PageInfo"}
 
 func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *model.PageInfo) graphql.Marshaler {
@@ -5304,97 +4244,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				return ec._Query___schema(ctx, field)
 			})
 
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var statEntryImplementors = []string{"StatEntry"}
-
-func (ec *executionContext) _StatEntry(ctx context.Context, sel ast.SelectionSet, obj *model.StatEntry) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, statEntryImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("StatEntry")
-		case "twitch_id":
-
-			out.Values[i] = ec._StatEntry_twitch_id(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "rank":
-
-			out.Values[i] = ec._StatEntry_rank(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "minutes_streamed":
-
-			out.Values[i] = ec._StatEntry_minutes_streamed(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "avg_viewers":
-
-			out.Values[i] = ec._StatEntry_avg_viewers(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "max_viewers":
-
-			out.Values[i] = ec._StatEntry_max_viewers(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "hours_watched":
-
-			out.Values[i] = ec._StatEntry_hours_watched(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "followers":
-
-			out.Values[i] = ec._StatEntry_followers(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "views":
-
-			out.Values[i] = ec._StatEntry_views(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "followers_total":
-
-			out.Values[i] = ec._StatEntry_followers_total(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "views_total":
-
-			out.Values[i] = ec._StatEntry_views_total(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5992,16 +4841,6 @@ func (ec *executionContext) marshalNMemberConnection2ᚖgithubᚗcomᚋthegolden
 	return ec._MemberConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMemberLink2ᚖgithubᚗcomᚋthegoldengatorᚋAPIv2ᚋinternalᚋgqlᚋgraphᚋmodelᚐMemberLink(ctx context.Context, sel ast.SelectionSet, v *model.MemberLink) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._MemberLink(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNObjectID2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6118,6 +4957,38 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

@@ -51,16 +51,7 @@ func InitiateMember(w http.ResponseWriter, r *http.Request) {
 		DisplayName: user.DisplayName,
 		Color:       "#fff",
 		Pfp:         user.ProfileImageURL,
-		Links: &structures.MemberLink{
-			Twitch:        body.Links.Twitch,
-			Reddit:        body.Links.Reddit,
-			Instagram:     body.Links.Instagram,
-			Twitter:       body.Links.Twitter,
-			Discord:       body.Links.Discord,
-			Youtube:       body.Links.Youtube,
-			Tiktok:        body.Links.Tiktok,
-			VrchatLegends: body.Links.VrchatLegends,
-		},
+		Links:       body.Links,
 	}
 	_, errDb := database.Mongo.Members.InsertOne(context.Background(), member)
 	if errDb != nil {

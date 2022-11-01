@@ -28,7 +28,7 @@ func (r *streamResolver) Member(ctx context.Context, obj *model.Stream) (*model.
 		DisplayName: member.DisplayName,
 		Color:       member.Color,
 		Pfp:         member.Pfp,
-		Links:       (*model.MemberLink)(member.Links),
+		Links:       member.Links,
 	}, nil
 }
 

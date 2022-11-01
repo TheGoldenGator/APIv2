@@ -61,7 +61,7 @@ func (r *queryResolver) Members(ctx context.Context, limitArg *int, pageArg *int
 			DisplayName: s.DisplayName,
 			Color:       s.Color,
 			Pfp:         s.Pfp,
-			Links:       (*model.MemberLink)(s.Links),
+			Links:       s.Links,
 		})
 	}
 

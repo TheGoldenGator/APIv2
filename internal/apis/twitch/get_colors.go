@@ -32,7 +32,7 @@ type UserColor struct {
 func (t Twitch) SetColors() error {
 	// Get all IDs from members
 	ctx := context.Background()
-	cursor, err := database.Mongo.Members.Find(ctx, bson.M{}, options.Find().SetProjection(bson.D{{"twitch_id", 1}}))
+	cursor, err := database.Mongo.Members.Find(ctx, bson.M{}, options.Find().SetProjection(bson.D{{Key: "twitch_id", Value: 1}}))
 	if err != nil {
 		return err
 	}
@@ -55,7 +55,7 @@ func (t Twitch) SetColors() error {
 
 	// Insert color field right before pfp
 	for _, uc := range colors {
-		database.Mongo.Members.UpdateOne(ctx, bson.M{"twitch_id": uc.UserID}, bson.D{{"$set", bson.D{{"color", uc.Color}}}})
+		database.Mongo.Members.UpdateOne(ctx, bson.M{"twitch_id": uc.UserID}, bson.D{{Key: "$set", Value: bson.D{{Key: "color", Value: uc.Color}}}})
 	}
 
 	fmt.Println(colors)
